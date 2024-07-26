@@ -71,3 +71,13 @@ form button {
 	display: flex;
 	gap: 10px;
 }
+.form-control {
+	background: linear-gradient(135deg, #1e5799 0%, #7db9e8 100%);
+	border: unset;
+}
+form input {
+	color: white;
+}
+form .cvv {
+	width: 16%;
+}

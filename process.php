@@ -1,21 +1,24 @@
 <?php
-session_start();
+/**
+ * На хостинги желательно реализовать проверку nonce для формы временно убрал чтоб не мешала для тестирования
+ */
 
-function verify_nonce( $nonce, $action ) {
-	if ( isset( $_SESSION[ $action . '_nonce' ] ) && $_SESSION[ $action . '_nonce' ] === $nonce ) {
-		unset( $_SESSION[ $action . '_nonce' ] );
-
-		return true;
-	}
-
-	return false;
-}
+//session_start();
+//function verify_nonce( $nonce, $action ) {
+//	if ( isset( $_SESSION[ $action . '_nonce' ] ) && $_SESSION[ $action . '_nonce' ] === $nonce ) {
+//		unset( $_SESSION[ $action . '_nonce' ] );
+//
+//		return true;
+//	}
+//
+//	return false;
+//}
 
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-	$nonce = $_POST['nonce'];
-	if ( ! verify_nonce( $nonce, 'credit_card_form' ) ) {
-		die( 'Invalid nonce.' );
-	}
+//	$nonce = $_POST['nonce'];
+//	if ( ! verify_nonce( $nonce, 'credit_card_form' ) ) {
+//		die( 'Invalid nonce.' );
+//	}
 
 	$cardNumber  = trim( $_POST['cardNumber'] );
 	$expiryMonth = trim( $_POST['expiryMonth'] );
@@ -27,11 +30,11 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 	function validateCardNumber( $number ) {
 		$number = str_replace( ' ', '', $number );
 
-		return preg_match( '/^\d{13,19}$/', $number );
+		return preg_match( '/^\d{16}$/', $number );
 	}
 
 	function validateCVV( $cvv ) {
-		return preg_match( '/^\d{3,4}$/', $cvv );
+		return preg_match( '/^\d{3}$/', $cvv );
 	}
 
 	function validateExpiryDate( $month, $year ) {
@@ -49,11 +52,11 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 	}
 
 	if ( ! validateCardNumber( $cardNumber ) ) {
-		$errors[] = 'Invalid card number. It should be 13 to 19 digits.';
+		$errors[] = 'Invalid card number. It should be 16 digits.';
 	}
 
 	if ( ! validateCVV( $cvv ) ) {
-		$errors[] = 'Invalid CVV. It should be 3 or 4 digits.';
+		$errors[] = 'Invalid CVV. It should be 3 digits.';
 	}
 
 	if ( ! validateExpiryDate( $expiryMonth, $expiryYear ) ) {
